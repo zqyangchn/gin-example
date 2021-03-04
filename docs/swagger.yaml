@@ -1,0 +1,361 @@
+definitions:
+  app.Claims:
+    properties:
+      appKey:
+        type: string
+      appSecret:
+        type: string
+    type: object
+  app.Response:
+    properties:
+      code:
+        type: string
+      data:
+        type: object
+      details:
+        items:
+          type: string
+        type: array
+      message:
+        type: string
+    type: object
+  errcode.ErrorMessage:
+    properties:
+      code:
+        type: string
+      details:
+        items:
+          type: string
+        type: array
+      message:
+        type: string
+    type: object
+  errcode.ErrorMessages:
+    items:
+      $ref: '#/definitions/errcode.ErrorMessage'
+    type: array
+  models.Tag:
+    properties:
+      created_by:
+        type: string
+      modified_by:
+        type: string
+      name:
+        type: string
+      state:
+        type: integer
+    type: object
+  service.AuthResponse:
+    properties:
+      code:
+        type: string
+      data:
+        $ref: '#/definitions/service.Token'
+        type: object
+      details:
+        items:
+          type: string
+        type: array
+      message:
+        type: string
+    type: object
+  service.ErrorMessageResponse:
+    properties:
+      code:
+        type: string
+      data:
+        $ref: '#/definitions/errcode.ErrorMessages'
+        type: object
+      details:
+        items:
+          type: string
+        type: array
+      message:
+        type: string
+    type: object
+  service.ReverseSolutionJWTResponse:
+    properties:
+      code:
+        type: string
+      data:
+        $ref: '#/definitions/app.Claims'
+        type: object
+      details:
+        items:
+          type: string
+        type: array
+      message:
+        type: string
+    type: object
+  service.Token:
+    properties:
+      token:
+        type: string
+    type: object
+  service.UploadFileResponse:
+    properties:
+      accessUrl:
+        type: string
+      code:
+        type: string
+      details:
+        items:
+          type: string
+        type: array
+      message:
+        type: string
+    type: object
+  tagsvc.TagList:
+    properties:
+      tags:
+        items:
+          $ref: '#/definitions/models.Tag'
+        type: array
+      totalCount:
+        type: integer
+    type: object
+  tagsvc.TagListResponse:
+    properties:
+      code:
+        type: string
+      data:
+        $ref: '#/definitions/tagsvc.TagList'
+        type: object
+      details:
+        items:
+          type: string
+        type: array
+      message:
+        type: string
+    type: object
+info:
+  contact:
+    email: zqyangchn@gmail.com
+    name: API Support
+    url: http://github.com/zqyangchn
+  description: smp ops system.
+  license: {}
+  termsOfService: http://github.com/zqyangchn
+  title: API swagger
+  version: "1.0"
+paths:
+  /api/v1/tags:
+    get:
+      parameters:
+      - description: 标签名称
+        in: query
+        maxLength: 100
+        name: name
+        type: string
+      - default: 1
+        description: 状态
+        enum:
+        - 0
+        - 1
+        in: query
+        name: state
+        type: integer
+      - description: 页码
+        in: query
+        name: pageNumber
+        type: integer
+      - description: 每页数量
+        in: query
+        name: PageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tagsvc.TagListResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.Response'
+      summary: 获取多个标签
+    post:
+      parameters:
+      - description: Name
+        in: body
+        maxLength: 100
+        minLength: 3
+        name: name
+        required: true
+        schema:
+          type: string
+      - description: CreatedBy
+        in: body
+        maxLength: 100
+        minLength: 3
+        name: createdBy
+        required: true
+        schema:
+          type: string
+      - default: 1
+        description: State
+        enum:
+        - 0
+        - 1
+        in: body
+        name: state
+        schema:
+          type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.Response'
+      summary: 添加标签
+  /api/v1/tags/{id}:
+    delete:
+      parameters:
+      - description: 标签id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.Response'
+      summary: 删除标签
+    put:
+      parameters:
+      - description: 标签id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 标签名称
+        in: body
+        maxLength: 100
+        minLength: 3
+        name: name
+        required: true
+        schema:
+          type: string
+      - default: 0
+        description: 状态
+        enum:
+        - 0
+        - 1
+        in: body
+        name: state
+        schema:
+          type: integer
+      - description: 修改者
+        in: body
+        maxLength: 100
+        minLength: 3
+        name: modified_by
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.Response'
+      summary: 更新标签
+  /auth:
+    post:
+      parameters:
+      - description: appKey
+        in: body
+        name: appKey
+        schema:
+          type: string
+      - description: appSecret
+        in: body
+        name: appSecret
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.AuthResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.Response'
+      summary: 权限验证, 获取 Token
+  /error/message:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.ErrorMessageResponse'
+      summary: 获取错误码
+  /reverse/solution/jwt:
+    get:
+      parameters:
+      - description: token
+        in: query
+        name: token
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.ReverseSolutionJWTResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.Response'
+      summary: 解析Token成json格式
+  /upload/file:
+    post:
+      parameters:
+      - default: "1"
+        description: 文件类型
+        enum:
+        - "1"
+        in: query
+        name: type
+        type: string
+      - description: 文件
+        in: query
+        name: file
+        type: string
+      produces:
+      - multipart/form-data
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.UploadFileResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.Response'
+      summary: 上传文件
+swagger: "2.0"

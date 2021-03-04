@@ -1,0 +1,2 @@
+{"Level":"info","Time":"2020-08-24T13:51:43.384+0800","Caller":"logger/logger.go:96","Message":"初始化日志","Level":"debug"}
+{"Level":"info","Time":"2020-08-24T13:51:43.437+0800","Caller":"http-service/http-service.go:35","Message":"Web Server started !"}

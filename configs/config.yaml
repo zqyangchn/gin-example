@@ -1,0 +1,63 @@
+# go get -u github.com/spf13/viper
+# gin server config
+Server:
+  # release|debug
+  RunMode: debug
+  HttpPort: 8000
+  ReadTimeout: 60
+  WriteTimeout: 50
+
+# app config
+App:
+  DefaultPageSize: 10
+  MaxPageSize: 100
+  UploadSavePath: storage/uploads
+  UploadServerUrl: http://127.0.0.1:8000/static
+  UploadImageMaxSize: 5 #MB
+  UploadImageAllowExts:
+    - .jpg
+    - .jpeg
+    - .png
+
+# log config
+Log:
+  # debug|info|warn|error|panic|fatal
+  # if server.RunMode is debug, log level force to set debug.
+  # if server.RunMode is release, log level force to set info.
+  Level: debug
+  Stdout: true
+  FilePath: storage/logs/app.log
+
+# database config
+Database:
+  DBType: mysql
+  Username: smp
+  Password: MFsmp@2019!
+  Host: 172.18.0.131:3306
+  DBName: blog_service
+  TablePrefix:
+  Charset: utf8mb4
+  ParseTime: True
+  MaxIdleConns: 10
+  MaxOpenConns: 30
+  # custer gorm zap log config, sql exec slow threshold ms
+  GormForceGormZapLog: false
+  GormLogSlowThreshold: 100
+
+# SessionRedis config
+SessionRedis:
+  # Type singlePoint | cluster
+  Type: singlePoint
+  # 单点模式地址
+  Address: 172.18.0.131:7000
+  # 集群模式地址
+  Addresses:
+    - 172.18.10.120:7000
+    - 172.18.10.120:7001
+  Password: ''
+
+# jwt config
+JWT:
+  Secret: zqyangchn
+  Issuer: http-service
+  Expire: 7200
